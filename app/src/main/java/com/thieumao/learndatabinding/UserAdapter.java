@@ -1,11 +1,13 @@
 package com.thieumao.learndatabinding;
 
 import android.content.Context;
+import android.databinding.DataBindingUtil;
+import android.databinding.ViewDataBinding;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.thieumao.learndatabinding.databinding.ItemRecyclerViewUserBinding;
 
 import java.util.List;
 
@@ -25,15 +27,16 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
 
     @Override
     public UserViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new UserViewHolder(mLayoutInflater.inflate(R.layout.item_recycler_view_user, parent, false));
+        ItemRecyclerViewUserBinding binding = DataBindingUtil.inflate(mLayoutInflater, R.layout.item_recycler_view_user, parent, false);
+        return new UserViewHolder(binding);
     }
 
     @Override
     public void onBindViewHolder(UserViewHolder holder, int position) {
         User user = mUserList.get(position);
-        holder.mTextViewFirstName.setText(user.getFirstName());
-        holder.mTextViewLastName.setText(user.getLastName());
+        holder.getBinding().setVariable(BR.user, user);
     }
+
 
     @Override
     public int getItemCount() {
@@ -41,13 +44,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
     }
 
     public class UserViewHolder extends RecyclerView.ViewHolder {
-        private TextView mTextViewLastName;
-        private TextView mTextViewFirstName;
+        private ViewDataBinding mBinding;
 
-        public UserViewHolder(View itemView) {
-            super(itemView);
-            mTextViewFirstName = (TextView) itemView.findViewById(R.id.text_first_name);
-            mTextViewLastName = (TextView) itemView.findViewById(R.id.text_last_name);
+        public UserViewHolder(ViewDataBinding binding) {
+            super(binding.getRoot());
+            mBinding = binding;
+        }
+
+        public ViewDataBinding getBinding() {
+            return mBinding;
         }
     }
 }
